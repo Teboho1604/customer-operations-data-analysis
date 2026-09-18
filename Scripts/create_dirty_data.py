@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import numpy as np
+import os
 
 # ============================================================
 # CUSTOMER SERVICE DATASET — DIRTY DATA GENERATOR
@@ -9,11 +10,20 @@ import numpy as np
 random.seed(42)
 np.random.seed(42)
 
-# Load your clean dataset
-df = pd.read_csv("customer_service_clean.csv")
+# ------------------------------------------------------------
+# Create output directory
+# ------------------------------------------------------------
+
+os.makedirs("data", exist_ok=True)
 
 # ------------------------------------------------------------
-# 1. Inconsistent capitalization
+# Load the original clean dataset
+# ------------------------------------------------------------
+
+df = pd.read_csv("customer_service_data.csv")
+
+# ------------------------------------------------------------
+# 1. Inconsistent Product capitalization
 # ------------------------------------------------------------
 
 df.loc[5, "Product"] = "suv"
@@ -100,7 +110,7 @@ df.loc[145, "Date"] = "2026.04.11"
 df.loc[203, "Date"] = "05/05/2026"
 
 # ------------------------------------------------------------
-# 9. Extra whitespace
+# 9. Extra whitespace in Customer_ID
 # ------------------------------------------------------------
 
 df.loc[39, "Customer_ID"] = " C038"
@@ -124,7 +134,10 @@ df.loc[247, "Customer_ID"] = "CUSTOMER248"
 
 duplicates = df.iloc[[10, 35, 80, 150, 220]].copy()
 
-df = pd.concat([df, duplicates], ignore_index=True)
+df = pd.concat(
+    [df, duplicates],
+    ignore_index=True
+)
 
 # ------------------------------------------------------------
 # 12. Duplicate Customer IDs with different information
@@ -150,10 +163,13 @@ df.loc[198, "Channel"] = "Whats App"
 # 14. Save dirty dataset
 # ------------------------------------------------------------
 
-df.to_csv("customer_service_dirty.csv", index=False)
+df.to_csv(
+    "data/customer_service_dirty.csv",
+    index=False
+)
 
 print("Dirty dataset created successfully.")
 print(f"Rows: {len(df)}")
 print(f"Columns: {len(df.columns)}")
 print()
-print("Output file: customer_service_dirty.csv")
+print("Output file: data/customer_service_dirty.csv")
